@@ -3,8 +3,8 @@ import queue
 import matplotlib.pyplot as plt
 import numpy as np
 
-lam = 19 #Lambda for exponential distribution
-mu = 20  #Mu for exponential distribution
+lam = 1 #Lambda for exponential distribution
+mu = 2  #Mu for exponential distribution
 
 class Server:
     def __init__(self):
@@ -124,6 +124,16 @@ def departure(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent
         departureEvent = Event("DEPARTURE", departureTime)
         eventQueue.addEventbasedOnTimestamp(departureEvent)
 
+def confidenceInterval(totalTimeSpent):
+    mean = np.mean(totalTimeSpent)
+    standardDeviation = np.std(totalTimeSpent)
+    n = len(totalTimeSpent)
+    z = 1.96
+    marginOfError = z * (standardDeviation / np.sqrt(n))
+    lowerBound = mean - marginOfError
+    upperBound = mean + marginOfError
+    print(f"Confidence Interval: [{lowerBound}, {upperBound}]")
+
 def plot(totalTimeSpent):
     
     averageRun = []
@@ -177,7 +187,10 @@ def main():
 
     
     print("Simulation ended at: ", datetime.datetime.now())
+    print("Calculating confidence interval and plotting results...")
+    confidenceInterval(totalTimeSpent)
     plot(totalTimeSpent)
+    return 0
 
 
 if __name__ == "__main__":

@@ -1,9 +1,10 @@
 import datetime
-import queue
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 lam = 1 #Lambda for exponential distribution
+lam2 = 0.2 #Lambda for exercise 2
 mu = 2  #Mu for exponential distribution
 
 class Server:
@@ -88,14 +89,20 @@ class EventQueue:
 class randomGenerator:
     def __init__(self):
         self.rng = np.random.default_rng()
-    
-    def generateUniformRandNum(self):
-        return self.rng.random()
 
     def generateExponentialRandNum(self, num):
         return self.rng.exponential(1/num)
+    
+    def generateCustomServiceTime(self, M):
+        while True:
+            x = self.rng.uniform(0, 6)
+            y = self.rng.uniform(0, M)
+            
+            if y <= newServiceTime(x):
+                return x
 
-def arrival(currentEvent, currentTime, eventQueue, server, rng, waitingQueue):
+# Arrival function defined for exercise 1
+def arrivalEx1(currentEvent, currentTime, eventQueue, server, rng, waitingQueue):
         nextArrivalTime = currentTime + rng.generateExponentialRandNum(lam)
         nextArrivalTimeEvent = Event("ARRIVAL", nextArrivalTime)
         eventQueue.addEventbasedOnTimestamp(nextArrivalTimeEvent)
@@ -108,7 +115,22 @@ def arrival(currentEvent, currentTime, eventQueue, server, rng, waitingQueue):
             departureEvent = Event("DEPARTURE", departureTime)
             eventQueue.addEventbasedOnTimestamp(departureEvent)
 
-def departure(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent, mu):
+# Arrival function defined for exercise 2
+def arrivalEx2(currentEvent, currentTime, eventQueue, server, rng, waitingQueue, M):
+        nextArrivalTime = currentTime + rng.generateExponentialRandNum(lam2)
+        nextArrivalTimeEvent = Event("ARRIVAL", nextArrivalTime)
+        eventQueue.addEventbasedOnTimestamp(nextArrivalTimeEvent)
+
+        if server.isBusy():
+            waitingQueue.append(currentTime)
+        else:
+            server.assignEvent(currentEvent)
+            departureTime = currentTime + rng.generateCustomServiceTime(M)
+            departureEvent = Event("DEPARTURE", departureTime)
+            eventQueue.addEventbasedOnTimestamp(departureEvent)
+
+# Departure function defined for exercise number 1
+def departureEx1(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent, mu):
     arrival = server.getCurrentEvent()
     systemTime = currentTime - arrival.timestamp
     totalTimeSpent.append(systemTime)
@@ -118,50 +140,96 @@ def departure(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent
     else:
         nextArrivalTime = waitingQueue.pop(0)
         server.assignEvent(Event("ARRIVAL", nextArrivalTime))
-
         serviceTime = rng.generateExponentialRandNum(mu)
         departureTime = currentTime + serviceTime
         departureEvent = Event("DEPARTURE", departureTime)
         eventQueue.addEventbasedOnTimestamp(departureEvent)
 
-def confidenceInterval(totalTimeSpent):
-    mean = np.mean(totalTimeSpent)
-    standardDeviation = np.std(totalTimeSpent)
-    n = len(totalTimeSpent)
+# Departure function defined for exercise number 2
+def departureEx2(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent, M):
+    arrival = server.getCurrentEvent()
+    systemTime = currentTime - arrival.timestamp
+    totalTimeSpent.append(systemTime)
+
+    if len(waitingQueue) == 0:
+        server.releaseEvent()
+    else:
+        nextArrivalTime = waitingQueue.pop(0)
+        server.assignEvent(Event("ARRIVAL", nextArrivalTime))
+        serviceTime = rng.generateCustomServiceTime(M)
+        departureTime = currentTime + serviceTime
+        departureEvent = Event("DEPARTURE", departureTime)
+        eventQueue.addEventbasedOnTimestamp(departureEvent)
+
+
+def confidenceInterval(totalTimeSpent, batch=500):
+    data = totalTimeSpent[1000:]
+    num = len(data) // batch
+    batchMean = []
+    
+    for i in range(num):
+        batches = data[i * batch : (i + 1) * batch]
+        batchMean.append(np.mean(batches))
+    
+
+    mean = np.mean(batchMean)
+    standardDeviation = np.std(batchMean, ddof=1)
+    n = len(batchMean)
     z = 1.96
     marginOfError = z * (standardDeviation / np.sqrt(n))
     lowerBound = mean - marginOfError
     upperBound = mean + marginOfError
-    print(f"Confidence Interval: [{lowerBound}, {upperBound}]")
+    print("Confidence Interval is between ", lowerBound, " and ", upperBound)
 
-def plot(totalTimeSpent):
+def plot(totalTimeSpent, isFirstEx = True):
     
     averageRun = []
     sum = 0
     for i, time in enumerate(totalTimeSpent):
         sum += time
         averageRun.append(sum / (i + 1))
-
-    average = 1 / (mu - lam)
+    
     plt.plot(averageRun, label="Running Average")
-    plt.axhline(y=average, color='r', linestyle='-', label="Theoretical Average")
+    
+    if isFirstEx:
+        average = 1 / (mu - lam)
+        plt.axhline(y=average, color='r', linestyle='-', label="Theoretical Average")
+    
     plt.xlabel("Number of Packets Processed")
     plt.ylabel("Average Time in System")
     plt.legend()
     plt.show()
 
+def newServiceTime(x):
+    if x < 0 or x > 6:
+        return 0
+    elif x == 3:
+        return 1.0
+    else:
+        return abs((math.sin(math.pi * (x - 3))) / (math.pi * (x - 3)))
+
+def getAvgServiceTime(M, rng):
+    totalNum = 10000
+    sum = 0
+    for _ in range(totalNum):
+        sum += rng.generateCustomServiceTime(M)
+    
+    avg = sum / totalNum
+    lambdaMax = 1 / avg
+    print("Estimated average service time:", avg)
+    print("Maximum arrival rate : < ", lambdaMax)
+
 def main():
     print("Simulation started at: ", datetime.datetime.now())
+    print("First exercise simulation, starting now!")
     print("Intializing event queue, server and random number generator...")
+    
     eventQueue = EventQueue()
     rng = randomGenerator()
     server = Server()
     currentTime = 0.0
     waitingQueue = []
     totalTimeSpent = []
-    
-    uniform = rng.generateUniformRandNum()
-    print("Uniform number generated: ", uniform)
 
     exponential = rng.generateExponentialRandNum(lam)
     print("Exponential number generated: ", exponential)
@@ -180,16 +248,64 @@ def main():
             break
 
         if currentEvent.eventType == "ARRIVAL":
-            arrival(currentEvent, currentTime, eventQueue, server, rng, waitingQueue)
+            arrivalEx1(currentEvent, currentTime, eventQueue, server, rng, waitingQueue)
         
         elif currentEvent.eventType == "DEPARTURE":
-            departure(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent, mu)
+            departureEx1(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent, mu)
 
     
     print("Simulation ended at: ", datetime.datetime.now())
     print("Calculating confidence interval and plotting results...")
     confidenceInterval(totalTimeSpent)
-    plot(totalTimeSpent)
+    plot(totalTimeSpent, True)
+
+    print("Simulation completed successfully for exercise 1!")
+    print("Starting simultation for exercise 2...")
+    print("Resetting event queue, server, waiting queue and total time spent...")
+    
+    eventQueue = EventQueue()
+    rng = randomGenerator()
+    server = Server()
+    currentTime = 0.0
+    waitingQueue = []
+    totalTimeSpent = []
+
+    print("Finding max value in x...")
+
+    X = np.linspace(0, 6, 10000)
+    M = max(newServiceTime(x) for x in X)
+
+    print("Found maximum height M: ", M)
+
+    getAvgServiceTime(M, rng)
+    exponential = rng.generateExponentialRandNum(lam2)
+    
+    print("Exponential number generated: ", exponential)
+
+    firstEvent = Event("ARRIVAL", exponential)
+    eventQueue.addEventbasedOnTimestamp(firstEvent)
+    
+    print("First event added to the queue with timestamp: ", exponential)
+
+    while not eventQueue.isEmpty():
+        currentEvent = eventQueue.removeEvent()
+        currentTime = currentEvent.timestamp
+        
+        if currentTime > MAX:
+            break
+
+        if currentEvent.eventType == "ARRIVAL":
+            arrivalEx2(currentEvent, currentTime, eventQueue, server, rng, waitingQueue, M)
+        
+        elif currentEvent.eventType == "DEPARTURE":
+            departureEx2(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSpent, M)
+
+    print("Simulation ended at: ", datetime.datetime.now())
+    print("Calculating confidence interval and plotting results...")
+    
+    confidenceInterval(totalTimeSpent)
+    plot(totalTimeSpent, False)
+
     return 0
 
 

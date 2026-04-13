@@ -1,11 +1,12 @@
 import datetime
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 import math
 
-lam = 4.8       #Lambda for exponential distribution
-lam2 = 0.1      #Lambda for exercise 2: lam2 << M
-mu = 5          #Mu for exponential distribution
+lam = 1      #Lambda for exponential distribution
+lam2 = 0.2      #Lambda for exercise 2: lam2 << M
+mu = 2          #Mu for exponential distribution
 
 class Server:
     def __init__(self):
@@ -183,27 +184,60 @@ def confidenceInterval(totalTimeSpent, batch=500):
     return lowerBound, upperBound
 
 def plot(totalTimeSpent, confidence, isFirstEx = True):
-    
+    rate = 750
     averageRun = []
     sum = 0
     for i, time in enumerate(totalTimeSpent):
         sum += time
-        averageRun.append(sum / (i + 1))
+        if i % rate == 0:
+            averageRun.append(sum / (i + 1))
     
-    plt.plot(averageRun, color='b', label="Running Average")
+    axisX = np.arange(0, len(totalTimeSpent), rate)
+    fig, zoom = plt.subplots(figsize=(10,6))
+    plt.plot(axisX, averageRun, color='b', label="Running Average", linewidth=1.5)
     
     CI = confidence
-    plt.axhline(y=CI[0], color = 'r', linestyle="--", label= "Confidence Interval")
-    plt.axhline(y=CI[1], color = 'r', linestyle="--")
+    plt.fill_between(axisX, CI[0], CI[1], color='orange', alpha=0.3, label="Confidence Interval")
 
+    zoomAxis = zoom.inset_axes([0.7, 0.25, 0.25, 0.25])
+    zoomAxis.plot(axisX, averageRun, color='b', linewidth=1.5)
+    zoomAxis.fill_between(axisX, CI[0], CI[1], color='orange', alpha=0.3)
+    minZoom = len(totalTimeSpent) * 0.80
+    maxZoom = len(totalTimeSpent)
+    zoomAxis.set_xlim(minZoom, maxZoom)
+    minY = CI[0] - 0.015
+    maxY = CI[1] + 0.015
+    zoomAxis.set_ylim(minY, maxY)
+    #zoomAxis.xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+    #zoomAxis.yaxis.set_major_locator(ticker.MaxNLocator(nbins=3))
+    #zoomAxis.xaxis.set_major_locator(ticker.MaxNLocator(nbins=3))
+    zoomAxis.set_xticks([])
+    zoomAxis.set_yticks([])
+    zoom.indicate_inset_zoom(zoomAxis, edgecolor="black")
+    
     if isFirstEx:
         average = 1 / (mu - lam)
-        plt.axhline(y=average, color='g', linestyle='--', label="Theoretical Average")
-    
+        plt.axhline(y=average, color='r', linestyle='--', label="Theoretical Average", linewidth=2)
+        zoomAxis.axhline(y=average, color='r', linestyle='--', linewidth=2)
+
     plt.xlim(None, len(totalTimeSpent))
-    plt.xlabel("Number of Packets Processed")
-    plt.ylabel("Average Time in System")
-    plt.legend()
+    plt.xlabel("Number of Packets Processed", fontsize=12)
+    plt.ylabel("Average Time in System", fontsize=12)
+    plt.gca().xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+    plt.gca().xaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
+    plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
+    plt.gca().tick_params(axis='both', which='major', labelsize=12)
+    plt.grid(True, linestyle=":", alpha=0.6)
+    plt.legend(loc="lower right", fontsize=10)
+
+    if isFirstEx:
+        plt.title("Exercise 1", fontsize=14)
+        plt.savefig("Exercise1.pdf", format="pdf", bbox_inches="tight", transparent=False)
+        print("Saved plot as Exercise1.pdf")
+    else:
+        plt.title("Exercise 2", fontsize=14)
+        plt.savefig("Exercise2.pdf", format="pdf", bbox_inches="tight", transparent=False)
+        print("Saved plot as Exercise2.pdf")
     plt.show()
 
 def newServiceTime(x):
@@ -244,7 +278,7 @@ def main():
     eventQueue.addEventbasedOnTimestamp(firstEvent)
     print("First event added to the queue with timestamp: ", exponential)
 
-    MAX = 1048576
+    MAX = 1000000
 
     while not eventQueue.isEmpty():
         currentEvent = eventQueue.removeEvent()

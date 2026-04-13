@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-lam = 1 #Lambda for exponential distribution
-lam2 = 0.2 #Lambda for exercise 2
-mu = 2  #Mu for exponential distribution
+lam = 4.8       #Lambda for exponential distribution
+lam2 = 0.1      #Lambda for exercise 2: lam2 << M
+mu = 5          #Mu for exponential distribution
 
 class Server:
     def __init__(self):
@@ -177,11 +177,12 @@ def confidenceInterval(totalTimeSpent, batch=500):
     n = len(batchMean)
     z = 1.96
     marginOfError = z * (standardDeviation / np.sqrt(n))
-    lowerBound = mean - marginOfError
-    upperBound = mean + marginOfError
+    lowerBound = round(mean - marginOfError, 4)
+    upperBound = round(mean + marginOfError, 4)
     print("Confidence Interval is between ", lowerBound, " and ", upperBound)
+    return lowerBound, upperBound
 
-def plot(totalTimeSpent, isFirstEx = True):
+def plot(totalTimeSpent, confidence, isFirstEx = True):
     
     averageRun = []
     sum = 0
@@ -189,12 +190,17 @@ def plot(totalTimeSpent, isFirstEx = True):
         sum += time
         averageRun.append(sum / (i + 1))
     
-    plt.plot(averageRun, label="Running Average")
+    plt.plot(averageRun, color='b', label="Running Average")
     
+    CI = confidence
+    plt.axhline(y=CI[0], color = 'r', linestyle="--", label= "Confidence Interval")
+    plt.axhline(y=CI[1], color = 'r', linestyle="--")
+
     if isFirstEx:
         average = 1 / (mu - lam)
-        plt.axhline(y=average, color='r', linestyle='-', label="Theoretical Average")
+        plt.axhline(y=average, color='g', linestyle='--', label="Theoretical Average")
     
+    plt.xlim(None, len(totalTimeSpent))
     plt.xlabel("Number of Packets Processed")
     plt.ylabel("Average Time in System")
     plt.legend()
@@ -214,14 +220,14 @@ def getAvgServiceTime(M, rng):
     for _ in range(totalNum):
         sum += rng.generateCustomServiceTime(M)
     
-    avg = sum / totalNum
-    lambdaMax = 1 / avg
+    avg = round(sum / totalNum, 4)
+    lambdaMax = round(1 / avg, 4)
     print("Estimated average service time:", avg)
     print("Maximum arrival rate : < ", lambdaMax)
 
 def main():
     print("Simulation started at: ", datetime.datetime.now())
-    print("First exercise simulation, starting now!")
+    print("Starting simultation for exercise 1...")
     print("Intializing event queue, server and random number generator...")
     
     eventQueue = EventQueue()
@@ -231,14 +237,14 @@ def main():
     waitingQueue = []
     totalTimeSpent = []
 
-    exponential = rng.generateExponentialRandNum(lam)
+    exponential = round(rng.generateExponentialRandNum(lam), 4)
     print("Exponential number generated: ", exponential)
 
     firstEvent = Event("ARRIVAL", exponential)
     eventQueue.addEventbasedOnTimestamp(firstEvent)
     print("First event added to the queue with timestamp: ", exponential)
 
-    MAX = 1000000
+    MAX = 1048576
 
     while not eventQueue.isEmpty():
         currentEvent = eventQueue.removeEvent()
@@ -256,8 +262,8 @@ def main():
     
     print("Simulation ended at: ", datetime.datetime.now())
     print("Calculating confidence interval and plotting results...")
-    confidenceInterval(totalTimeSpent)
-    plot(totalTimeSpent, True)
+    
+    plot(totalTimeSpent, confidenceInterval(totalTimeSpent), True)
 
     print("Simulation completed successfully for exercise 1!")
     print("Starting simultation for exercise 2...")
@@ -272,13 +278,13 @@ def main():
 
     print("Finding max value in x...")
 
-    X = np.linspace(0, 6, 10000)
+    X = np.linspace(0, 6, MAX)
     M = max(newServiceTime(x) for x in X)
 
     print("Found maximum height M: ", M)
 
     getAvgServiceTime(M, rng)
-    exponential = rng.generateExponentialRandNum(lam2)
+    exponential = round(rng.generateExponentialRandNum(lam2), 4)
     
     print("Exponential number generated: ", exponential)
 
@@ -303,8 +309,7 @@ def main():
     print("Simulation ended at: ", datetime.datetime.now())
     print("Calculating confidence interval and plotting results...")
     
-    confidenceInterval(totalTimeSpent)
-    plot(totalTimeSpent, False)
+    plot(totalTimeSpent, confidenceInterval(totalTimeSpent), False)
 
     return 0
 

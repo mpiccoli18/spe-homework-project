@@ -4,9 +4,9 @@ import matplotlib.ticker as ticker
 import numpy as np
 import math
 
-lam = 8         #Lambda for exponential distribution
+lam = 1             #Lambda for exponential distribution
 lam2 = 0.22         #Lambda for exercise 2: lam2 << M
-mu = 10              #Mu for exponential distribution
+mu = 2              #Mu for exponential distribution
 
 class Server:
     def __init__(self):
@@ -163,7 +163,6 @@ def confidenceInterval(totalTimeSpent, batch=500):
         batches = data[i * batch : (i + 1) * batch]
         batchMean.append(np.mean(batches))
     
-
     mean = np.mean(batchMean)
     standardDeviation = np.std(batchMean, ddof=1)
     n = len(batchMean)
@@ -174,8 +173,8 @@ def confidenceInterval(totalTimeSpent, batch=500):
     print("Confidence Interval is between ", lowerBound, " and ", upperBound)
     return lowerBound, upperBound
 
-def plot(totalTimeSpent, confidence, isFirstEx = True):
-    rate = 1000
+def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
+    rate = 500
     averageRun = []
     sum = 0
     for i, time in enumerate(totalTimeSpent):
@@ -184,7 +183,8 @@ def plot(totalTimeSpent, confidence, isFirstEx = True):
             averageRun.append(sum / (i + 1))
     
     axisX = np.arange(0, len(totalTimeSpent), rate)
-    fig, zoom = plt.subplots(figsize=(10,6))
+    #print(len(averageRun))
+    fig, zoom = plt.subplots(figsize=(10, 6))
     plt.plot(axisX, averageRun, color='b', label="Running Average", linewidth=1.5)
     
     CI = confidence
@@ -196,8 +196,9 @@ def plot(totalTimeSpent, confidence, isFirstEx = True):
     minZoom = len(totalTimeSpent) * 0.80
     maxZoom = len(totalTimeSpent)
     zoomAxis.set_xlim(minZoom, maxZoom)
-    minY = CI[0] - (CI[0] * 5 / 100)
-    maxY = CI[1] + (CI[1] * 5 / 100)
+    minY = CI[0] - (CI[0] / 100)
+    maxY = CI[1] + (CI[1] / 100)
+    #print("Min: ", minY, " Max: ", maxY);
     zoomAxis.set_ylim(minY, maxY)
     zoomAxis.set_xticks([])
     zoomAxis.set_yticks([])
@@ -209,6 +210,7 @@ def plot(totalTimeSpent, confidence, isFirstEx = True):
         zoomAxis.axhline(y=average, color='r', linestyle='--', linewidth=2)
 
     plt.xlim(None, len(totalTimeSpent))
+    plt.ylim(0, max(averageRun) * 1.05)
     plt.xlabel("Number of Packets Processed", fontsize=12, labelpad=15)
     plt.ylabel("Average Time in System (s)", fontsize=12, labelpad=15)
     plt.gca().xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
@@ -219,11 +221,13 @@ def plot(totalTimeSpent, confidence, isFirstEx = True):
     plt.legend(loc="best", fontsize=10)
 
     if isFirstEx:
-        plt.title("Exercise 1", fontsize=14)
+        plt.title("Exercise 1\n", fontsize=16, fontweight="bold", fontname="Arial", loc="center")
+        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam}, \\mu = {mu}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
         plt.savefig("Exercise1.pdf", format="pdf", bbox_inches="tight", transparent=False)
         print("Saved plot as Exercise1.pdf")
     else:
-        plt.title("Exercise 2", fontsize=14)
+        plt.title("Exercise 2\n", fontsize=16, fontweight="bold", fontname="Arial", loc="center")
+        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} < \\lambda_{{Max}} = {MaxArrival}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
         plt.savefig("Exercise2.pdf", format="pdf", bbox_inches="tight", transparent=False)
         print("Saved plot as Exercise2.pdf")
     plt.show()
@@ -238,7 +242,7 @@ def newServiceTime(x):
         return abs((math.sin(math.pi * (x - 3))) / (math.pi * (x - 3)))
 
 def getAvgServiceTime(M, rng):
-    totalNum = 10000
+    totalNum = 1000
     sum = 0
     for _ in range(totalNum):
         sum += rng.generateCustomServiceTime(M)
@@ -247,6 +251,7 @@ def getAvgServiceTime(M, rng):
     lambdaMax = round(1 / avg, 4)
     print("Estimated average service time:", avg)
     print("Maximum arrival rate : < ", lambdaMax)
+    return lambdaMax
 
 def main():
     print("Simulation started at: ", datetime.datetime.now())
@@ -267,8 +272,8 @@ def main():
     eventQueue.addEventbasedOnTimestamp(firstEvent)
     print("First event added to the queue with timestamp: ", exponential)
 
-    MAX = 1000000
-
+    MAX = 500000
+    M = 0
     while not eventQueue.isEmpty():
         currentEvent = eventQueue.removeEvent()
         currentTime = currentEvent.timestamp
@@ -286,7 +291,7 @@ def main():
     print("Simulation ended at: ", datetime.datetime.now())
     print("Calculating confidence interval and plotting results...")
     
-    plot(totalTimeSpent, confidenceInterval(totalTimeSpent), True)
+    plot(totalTimeSpent, confidenceInterval(totalTimeSpent), M, True)
 
     print("Simulation completed successfully for exercise 1!")
     print("Starting simultation for exercise 2...")
@@ -306,7 +311,7 @@ def main():
 
     print("Found maximum height M: ", M)
 
-    getAvgServiceTime(M, rng)
+    lambdaMax = getAvgServiceTime(M, rng)
     
     print(f"Exponential number generated: {exponential:.3f}")
 
@@ -331,7 +336,7 @@ def main():
     print("Simulation ended at: ", datetime.datetime.now())
     print("Calculating confidence interval and plotting results...")
     
-    plot(totalTimeSpent, confidenceInterval(totalTimeSpent), False)
+    plot(totalTimeSpent, confidenceInterval(totalTimeSpent), lambdaMax, False)
 
     return 0
 

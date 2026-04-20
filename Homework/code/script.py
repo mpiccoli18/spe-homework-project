@@ -5,7 +5,7 @@ import numpy as np
 import math
 
 lam = 1             #Lambda for exponential distribution
-lam2 = 0.22         #Lambda for exercise 2: lam2 << M
+lam2 = 0.25         #Lambda for exercise 2: lam2 < lambdaMax
 mu = 2              #Mu for exponential distribution
 
 class Server:
@@ -154,8 +154,8 @@ def departureEx2(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSp
         eventQueue.addEventbasedOnTimestamp(departureEvent)
 
 
-def confidenceInterval(totalTimeSpent, batch=500):
-    data = totalTimeSpent[1000:]
+def confidenceInterval(totalTimeSpent, batch=30000):
+    data = totalTimeSpent[10000:]
     num = len(data) // batch
     batchMean = []
     
@@ -168,9 +168,9 @@ def confidenceInterval(totalTimeSpent, batch=500):
     n = len(batchMean)
     z = 1.96
     marginOfError = z * (standardDeviation / np.sqrt(n))
-    lowerBound = round(mean - marginOfError, 4)
-    upperBound = round(mean + marginOfError, 4)
-    print("Confidence Interval is between ", lowerBound, " and ", upperBound)
+    lowerBound = mean - marginOfError
+    upperBound = mean + marginOfError
+    print(f"Confidence Interval is between {lowerBound:.4f} and {upperBound:.4f}")
     return lowerBound, upperBound
 
 def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
@@ -216,7 +216,7 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
     plt.gca().xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
     plt.gca().xaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
     plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
-    plt.gca().tick_params(axis='both', which='major', labelsize=12)
+    plt.gca().tick_params(axis='both', which='both', labelsize=12)
     plt.grid(True, linestyle=":", alpha=0.6)
     plt.legend(loc="best", fontsize=10)
 
@@ -227,7 +227,7 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
         print("Saved plot as Exercise1.pdf")
     else:
         plt.title("Exercise 2\n", fontsize=16, fontweight="bold", fontname="Arial", loc="center")
-        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} < \\lambda_{{Max}} = {MaxArrival}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
+        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} < \\lambda_{{Max}} = {MaxArrival:.4f}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
         plt.savefig("Exercise2.pdf", format="pdf", bbox_inches="tight", transparent=False)
         print("Saved plot as Exercise2.pdf")
     plt.show()
@@ -242,15 +242,15 @@ def newServiceTime(x):
         return abs((math.sin(math.pi * (x - 3))) / (math.pi * (x - 3)))
 
 def getAvgServiceTime(M, rng):
-    totalNum = 1000
+    totalNum = 1000000
     sum = 0
     for _ in range(totalNum):
         sum += rng.generateCustomServiceTime(M)
     
-    avg = round(sum / totalNum, 4)
-    lambdaMax = round(1 / avg, 4)
-    print("Estimated average service time:", avg)
-    print("Maximum arrival rate : < ", lambdaMax)
+    avg = sum / totalNum
+    lambdaMax = 1 / avg
+    print(f"Estimated average service time: {avg:.4f}")
+    print(f"Maximum arrival rate : < {lambdaMax:.4f}")
     return lambdaMax
 
 def main():
@@ -265,14 +265,14 @@ def main():
     waitingQueue = []
     totalTimeSpent = []
 
-    exponential = round(rng.generateExponentialRandNum(lam), 4)
-    print("Exponential number generated: ", exponential)
+    exponential = rng.generateExponentialRandNum(lam)
+    print(f"Exponential number generated: {exponential:.4f}")
 
     firstEvent = Event("ARRIVAL", exponential)
     eventQueue.addEventbasedOnTimestamp(firstEvent)
     print("First event added to the queue with timestamp: ", exponential)
 
-    MAX = 500000
+    MAX = 1000000
     M = 0
     while not eventQueue.isEmpty():
         currentEvent = eventQueue.removeEvent()
@@ -296,7 +296,7 @@ def main():
     print("Simulation completed successfully for exercise 1!")
     print("Starting simultation for exercise 2...")
     print("Resetting event queue, server, waiting queue and total time spent...")
-    
+
     eventQueue = EventQueue()
     rng = randomGenerator()
     server = Server()

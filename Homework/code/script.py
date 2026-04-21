@@ -4,8 +4,8 @@ import matplotlib.ticker as ticker
 import numpy as np
 import math
 
-lam = 2.5             #Lambda for exponential distribution
-lam2 = 0.35         #Lambda for exercise 2: lam2 < lambdaMax
+lam = 0.1             #Lambda for exponential distribution
+lam2 = 0.326         #Lambda for exercise 2: lam2 < lambdaMax
 mu = 2              #Mu for exponential distribution
 
 class Server:
@@ -190,7 +190,6 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
     CI = confidence
     plt.fill_between(axisX, CI[0], CI[1], color='orange', alpha=0.3, label="Confidence Interval")
 
-    '''
     zoomAxis = zoom.inset_axes([0.5, 0.2, 0.3, 0.2])
     zoomAxis.plot(axisX, averageRun, color='b', linewidth=1.5)
     zoomAxis.fill_between(axisX, CI[0], CI[1], color='orange', alpha=0.3)
@@ -204,11 +203,11 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
     zoomAxis.set_xticks([])
     zoomAxis.set_yticks([])
     zoom.indicate_inset_zoom(zoomAxis, edgecolor="black")
-    '''
+
     if isFirstEx:
         average = 1 / (mu - lam)
         plt.axhline(y=average, color='r', linestyle='--', label="Theoretical Average", linewidth=2)
-        #zoomAxis.axhline(y=average, color='r', linestyle='--', linewidth=2)
+        zoomAxis.axhline(y=average, color='r', linestyle='--', linewidth=2)
 
     plt.xlim(None, len(totalTimeSpent))
     plt.ylim(0, max(averageRun) * 1.05)
@@ -228,7 +227,7 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
         print("Saved plot as Exercise1.pdf")
     else:
         plt.title("Exercise 2\n", fontsize=16, fontweight="bold", fontname="Arial", loc="center")
-        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} > \\lambda_{{Max}} = {MaxArrival:.4f}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
+        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} < \\lambda_{{Max}} = {MaxArrival:.4f}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
         plt.savefig("plot6.pdf", format="pdf", bbox_inches="tight", transparent=False)
         print("Saved plot as Exercise2.pdf")
     plt.show()

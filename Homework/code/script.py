@@ -228,7 +228,7 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
         print("Saved plot as Exercise1.pdf")
     else:
         plt.title("Exercise 2\n", fontsize=16, fontweight="bold", fontname="Arial", loc="center")
-        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} < \\lambda_{{Max}} = {MaxArrival:.4f}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
+        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} > \\lambda_{{Max}} = {MaxArrival:.4f}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
         plt.savefig("plot6.pdf", format="pdf", bbox_inches="tight", transparent=False)
         print("Saved plot as Exercise2.pdf")
     plt.show()

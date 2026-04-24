@@ -4,8 +4,8 @@ import matplotlib.ticker as ticker
 import numpy as np
 import math
 
-lam = 0.1             #Lambda for exponential distribution
-lam2 = 0.326         #Lambda for exercise 2: lam2 < lambdaMax
+lam = 2.5             #Lambda for exponential distribution
+lam2 = 0.35         #Lambda for exercise 2: lam2 < lambdaMax
 mu = 2              #Mu for exponential distribution
 
 class Server:
@@ -211,23 +211,23 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
 
     plt.xlim(None, len(totalTimeSpent))
     plt.ylim(0, max(averageRun) * 1.05)
-    plt.xlabel("Number of Packets Processed", fontsize=12, labelpad=15)
-    plt.ylabel("Average Time in System (s)", fontsize=12, labelpad=15)
+    plt.xlabel("Number of Packets Processed", fontsize=20, labelpad=15)
+    plt.ylabel("Average Time in System (s)", fontsize=20, labelpad=15)
     plt.gca().xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
     plt.gca().xaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
     plt.gca().yaxis.set_major_locator(ticker.MaxNLocator(nbins=5))
-    plt.gca().tick_params(axis='both', which='both', labelsize=12)
+    plt.gca().tick_params(axis='both', which='both', labelsize=16)
     plt.grid(True, linestyle=":", alpha=0.6)
-    plt.legend(loc="best", fontsize=10)
+    plt.legend(loc="best", fontsize=16)
 
     if isFirstEx:
-        plt.title("Exercise 1\n", fontsize=16, fontweight="bold", fontname="Arial", loc="center")
-        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam}, \\mu = {mu}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
+        plt.title("Exercise 1\n", fontsize=24, fontweight="bold", fontname="Arial", loc="center")
+        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam}, \\mu = {mu}$", fontsize=16, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
         plt.savefig("plot5.pdf", format="pdf", bbox_inches="tight", transparent=False)
         print("Saved plot as Exercise1.pdf")
     else:
-        plt.title("Exercise 2\n", fontsize=16, fontweight="bold", fontname="Arial", loc="center")
-        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} < \\lambda_{{Max}} = {MaxArrival:.4f}$", fontsize=12, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
+        plt.title("Exercise 2\n", fontsize=24, fontweight="bold", fontname="Arial", loc="center")
+        plt.gca().text(0.5, 1.02, f"$\\lambda = {lam2} > \\lambda_{{Max}} = {MaxArrival:.4f}$", fontsize=16, fontstyle="italic", ha="center", transform=plt.gca().transAxes)
         plt.savefig("plot6.pdf", format="pdf", bbox_inches="tight", transparent=False)
         print("Saved plot as Exercise2.pdf")
     plt.show()

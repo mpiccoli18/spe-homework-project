@@ -4,8 +4,8 @@ import matplotlib.ticker as ticker
 import numpy as np
 import math
 
-lam = 2.5             #Lambda for exponential distribution
-lam2 = 0.35         #Lambda for exercise 2: lam2 < lambdaMax
+lam = 1             #Lambda for exponential distribution
+lam2 = 0.20         #Lambda for exercise 2: lam2 < lambdaMax
 mu = 2              #Mu for exponential distribution
 
 class Server:
@@ -233,6 +233,35 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
     plt.show()
 
 
+def plotRejectionSampling(M):
+    print("Plotting rejection sampling function...")
+    X = np.linspace(-0.5, 6.5, 1000)
+    Y = [newServiceTime(x) for x in X]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(X, Y, color='purple', label='Custom Service Time Distribution', linewidth=2.5)
+
+    fillX = np.linspace(0, 6, 1000)
+    fillY = [newServiceTime(x) for x in fillX]
+    plt.fill_between(fillX, fillY, color='purple', alpha = 0.3)
+
+    plt.hlines(y = M, xmin = 0, xmax = 6, colors='red', linestyles='--', linewidth=2, label=f'Maximum Height M = {M:.4f}')
+    plt.vlines(x = 0, ymin = 0, ymax = M, colors='red', linestyles='--', linewidth=2)
+    plt.vlines(x = 6, ymin = 0, ymax = M, colors='red', linestyles='--', linewidth=2)
+
+    plt.title("Rejection Sampling:\n Custom Service Time Distribution", fontsize=24, fontweight="bold", fontname="Arial", pad = 15)
+    plt.xlabel("Service Time (s)", fontsize=20, labelpad=15)
+    plt.ylabel("Probability Density", fontsize=20, labelpad=15)
+
+    plt.xlim(-0.5, 6.5)
+    plt.ylim(0, M * 1.5)
+    plt.gca().tick_params(axis='both', which='both', labelsize=16)
+    plt.grid(True, linestyle=":", alpha=0.6)
+    plt.legend(loc="best", fontsize=16)
+    plt.savefig("RejectionSampling.pdf", format="pdf", bbox_inches="tight", transparent=False)
+    print("Saved plot as RejectionSampling.pdf")
+    plt.show()
+
 def newServiceTime(x):
     if x < 0 or x > 6:
         return 0
@@ -344,6 +373,7 @@ def main():
     print("Calculating confidence interval and plotting results...")
     
     plot(totalTimeSpent, confidenceInterval(totalTimeSpent), lambdaMax, False)
+    plotRejectionSampling(M)
 
     return 0
 

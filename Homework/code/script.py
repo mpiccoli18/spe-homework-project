@@ -153,7 +153,7 @@ def departureEx2(currentTime, eventQueue, server, rng, waitingQueue, totalTimeSp
         departureEvent = Event("DEPARTURE", departureTime)
         eventQueue.addEventbasedOnTimestamp(departureEvent)
 
-
+# Function to calculate the confidence interval for the avg time spent
 def confidenceInterval(totalTimeSpent, batch=40000):
     data = totalTimeSpent[20000:]
     num = len(data) // batch
@@ -173,6 +173,7 @@ def confidenceInterval(totalTimeSpent, batch=40000):
     print(f"Confidence Interval is between {lowerBound:.4f} and {upperBound:.4f}")
     return lowerBound, upperBound
 
+# Plotting function for both exercises
 def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
     rate = 500
     averageRun = []
@@ -232,7 +233,7 @@ def plot(totalTimeSpent, confidence, MaxArrival, isFirstEx):
         print("Saved plot as Exercise2.pdf")
     plt.show()
 
-
+# Plotting function for the custom service time distribution and the rejection sampling method
 def plotRejectionSampling(M):
     print("Plotting rejection sampling function...")
     X = np.linspace(-0.5, 6.5, 1000)
@@ -262,6 +263,7 @@ def plotRejectionSampling(M):
     print("Saved plot as RejectionSampling.pdf")
     plt.show()
 
+# Function to define the custom service time for exercise 2
 def newServiceTime(x):
     if x < 0 or x > 6:
         return 0
@@ -270,6 +272,7 @@ def newServiceTime(x):
     else:
         return abs((math.sin(math.pi * (x - 3))) / (math.pi * (x - 3)))
 
+# Function to estimate the avg service time
 def getAvgServiceTime(M, rng):
     totalNum = 1000000
     sum = 0

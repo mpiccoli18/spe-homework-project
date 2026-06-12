@@ -1,0 +1,7 @@
+<AnalogueModels>
+    <AnalogueModel type="SimpleObstacleShadowing">
+        <parameter name="carrierFrequency" value="5.890e9"/> </AnalogueModel>
+    <AnalogueModel type="TwoRayInterferenceModel">
+        <parameter name="epsilon_r" value="1.02"/>
+    </AnalogueModel>
+</AnalogueModels>

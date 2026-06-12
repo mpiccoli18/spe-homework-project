@@ -1,0 +1,4 @@
+<AnalogueModels>
+    <AnalogueModel type="TwoRayInterferenceModel">
+        <parameter name="epsilon_r" value="1.02"/> </AnalogueModel>
+</AnalogueModels>

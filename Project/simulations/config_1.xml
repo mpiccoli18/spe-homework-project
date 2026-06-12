@@ -1,0 +1,4 @@
+<AnalogueModels>
+    <AnalogueModel type="FreeSpaceModel">
+        <parameter name="alpha" value="2.0"/> </AnalogueModel>
+</AnalogueModels>

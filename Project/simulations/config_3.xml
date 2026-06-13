@@ -1,7 +1,12 @@
-<AnalogueModels>
-    <AnalogueModel type="SimpleObstacleShadowing">
-        <parameter name="carrierFrequency" value="5.890e9"/> </AnalogueModel>
-    <AnalogueModel type="TwoRayInterferenceModel">
-        <parameter name="epsilon_r" value="1.02"/>
-    </AnalogueModel>
-</AnalogueModels>
+<?xml version="1.0" encoding="UTF-8"?>
+<root>	
+	<AnalogueModels>
+	    <AnalogueModel type="SimpleObstacleShadowing">
+	        <parameter name="carrierFrequency" value="5.890e9"/> </AnalogueModel>
+	    <AnalogueModel type="TwoRayInterferenceModel">
+	        <parameter name="epsilon_r" value="1.02"/>
+	    </AnalogueModel>
+	</AnalogueModels>
+	<Decider type="Decider80211p">
+        </Decider>
+</root>

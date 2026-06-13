@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<obstacles>
+    <type id="building" attenuationPerCut="9" attenuationPerMeter="0.4"/>
+    
+    <obstacle id="building_0" type="building" shape="25,25 125,25 125,125 25,125"/>
+    <obstacle id="building_1" type="building" shape="25,175 125,175 125,275 25,275"/>
+    <obstacle id="building_2" type="building" shape="175,25 275,25 275,125 175,125"/>
+    <obstacle id="building_3" type="building" shape="175,175 275,175 275,275 175,275"/>
+</obstacles>

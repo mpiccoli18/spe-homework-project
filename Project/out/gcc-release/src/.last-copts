@@ -1,0 +1,1 @@
+-O3 -DNDEBUG=1 -g1 -ffp-contract=off   -MMD -MP -MF .d  -fPIC  -fno-omit-frame-pointer  -DOMNETPPLIBS_IMPORT -DVEINS_IMPORT  -I/home/vagrant/omnetpp-6.2.0/include

@@ -1,7 +1,6 @@
 <additional>
      <poly id = "building_0" type = "building" color="179, 179, 179" fill = "1" layer = "-1" shape="25, 25 125, 25 125, 125"/>
      <poly id = "building_1" type = "building" color="179, 179, 179" fill = "1" layer = "-1" shape="25, 175 125, 175 125, 275"/>
-</additional>
      <poly id = "building_2" type = "building" color="179, 179, 179" fill = "1" layer = "-1" shape="175, 25 275, 25 275, 125"/>
      <poly id = "building_3" type = "building" color="179, 179, 179" fill = "1" layer = "-1" shape="175, 175 275, 175 275, 275"/>
 </additional>

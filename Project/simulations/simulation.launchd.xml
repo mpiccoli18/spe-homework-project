@@ -1,0 +1,6 @@
+<launch>
+    <copy file="city.net.xml"/>
+    <copy file="traffic.rou.xml"/>
+    <copy file="buildings.poly.xml"/>
+    <copy file="simulation.sumocfg"/>
+</launch>

@@ -1,0 +1,1 @@
+-O0 -Wall -ggdb3   -MMD -MP -MF .d  -fPIC  -fno-omit-frame-pointer  -DOMNETPPLIBS_IMPORT -DVEINS_IMPORT  -I/home/vagrant/omnetpp-6.2.0/include

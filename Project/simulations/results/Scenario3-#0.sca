@@ -1,8 +1,8 @@
 version 3
-run Scenario3-0-20260614-16:47:03-5458
+run Scenario3-0-20260614-20:19:45-2840
 attr configname Scenario3
-attr datetime 20260614-16:47:03
-attr datetimef 20260614-164703
+attr datetime 20260614-20:19:45
+attr datetimef 20260614-201945
 attr experiment Scenario3
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network org.car2x.veins.nodes.Scenario
-attr processid 5458
+attr processid 2840
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -50,6 +50,12 @@ config *.**.nic.phy80211p.minPowerLevel -110dBm
 config *.**.nic.phy80211p.useNoiseFloor true
 config *.**.nic.phy80211p.noiseFloor -98dBm
 config *.**.nic.phy80211p.usePropagationDelay true
+config **.vector-recording true
+config **.scalar-recording true
+config *.**.nic.phy80211p.*.vector-recording true
+config *.**.nic.mac1609_4.*.vector-recording true
+config **.rcvdPower:vector.vector-recording true
+config **.snir:vector.vector-recording true
 
 par Scenario.node[13].appl typename "\"org.car2x.veins.modules.application.traci.TraCIDemo11p\""
 par Scenario.node[13].appl headerLength 80bit

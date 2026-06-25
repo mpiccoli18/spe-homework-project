@@ -27,7 +27,8 @@ The `/Project` directory contains:
 ### 1. Generating Traffic
 Traffic is generated stochastically to ensure statistical fairness across runs. \
 We utilize SUMO's `randomTrips.py` script. Navigate to the `/simulations` folder and run:
-```bash
+
+```sh
 python $SUMO_HOME/tools/randomTrips.py -n map.net.xml -r routes.rou.xml -e 100 -l
 ```
 
@@ -46,19 +47,25 @@ The defined scenarios are three:
 ### 3. Data Extraction and Plotting
 Once the simulations complete, the `.sca` (scalar) files must be parsed. To do so, simply run:
 
-```bash
+```sh
 python script/export.py
 ```
 
 To look at what parameters the simulations have stored inside the _.csv_ files, simply run:
 
-```bash
+```sh
 python script/variables.py
+```
+
+Instead, if you want to know how many cars were at most, simultaneously, inside the simulation simply run:
+
+```sh
+python script/maxVehicles.py
 ```
 
 The plotting script automatically calculates the mean and 95% CI across all 10 runs for three different performance metrics:
 
-```bash
+```sh
 python script/plot.py
 ```
 

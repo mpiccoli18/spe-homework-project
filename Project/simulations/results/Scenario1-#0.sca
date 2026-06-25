@@ -1,8 +1,8 @@
 version 3
-run Scenario1-0-20260614-20:16:51-2667
+run Scenario1-0-20260625-09:09:19-2635
 attr configname Scenario1
-attr datetime 20260614-20:16:51
-attr datetimef 20260614-201651
+attr datetime 20260625-09:09:19
+attr datetimef 20260625-090919
 attr experiment Scenario1
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network org.car2x.veins.nodes.Scenario
-attr processid 2667
+attr processid 2635
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -21,6 +21,8 @@ config description "Pure Free Space (No ground, no buildings)"
 config *.annotations.draw false
 config *.**.nic.phy80211p.decider "xmldoc(\"config_1.xml\")"
 config *.**.nic.phy80211p.analogueModels "xmldoc(\"config_1.xml\")"
+config repeat 10
+config seed-set 0
 config network org.car2x.veins.nodes.Scenario
 config sim-time-limit 100s
 config *.playgroundSizeX 600m

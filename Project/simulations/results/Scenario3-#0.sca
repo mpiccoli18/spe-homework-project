@@ -1,8 +1,8 @@
 version 3
-run Scenario3-0-20260614-20:19:45-2840
+run Scenario3-0-20260625-11:51:18-4258
 attr configname Scenario3
-attr datetime 20260614-20:19:45
-attr datetimef 20260614-201945
+attr datetime 20260625-11:51:18
+attr datetimef 20260625-115118
 attr experiment Scenario3
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network org.car2x.veins.nodes.Scenario
-attr processid 2840
+attr processid 4258
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -22,6 +22,8 @@ config *.annotations.draw true
 config *.obstacles.obstacles "xmldoc(\"config_3.xml\", \"//AnalogueModel[@type='SimpleObstacleShadowing']/obstacles\")"
 config *.**.nic.phy80211p.decider "xmldoc(\"config_3.xml\")"
 config *.**.nic.phy80211p.analogueModels "xmldoc(\"config_3.xml\")"
+config repeat 10
+config seed-set 0
 config network org.car2x.veins.nodes.Scenario
 config sim-time-limit 100s
 config *.playgroundSizeX 600m

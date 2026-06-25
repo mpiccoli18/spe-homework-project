@@ -1,8 +1,8 @@
 version 3
-run Scenario2-0-20260614-20:18:21-2758
+run Scenario2-0-20260625-12:08:06-4607
 attr configname Scenario2
-attr datetime 20260614-20:18:21
-attr datetimef 20260614-201821
+attr datetime 20260625-12:08:06
+attr datetimef 20260625-120806
 attr experiment Scenario2
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network org.car2x.veins.nodes.Scenario
-attr processid 2758
+attr processid 4607
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -21,6 +21,8 @@ config description "Two-Ray Ground (Radio bouncing off asphalt)"
 config *.annotations.draw false
 config *.**.nic.phy80211p.decider "xmldoc(\"config_2.xml\")"
 config *.**.nic.phy80211p.analogueModels "xmldoc(\"config_2.xml\")"
+config repeat 10
+config seed-set 0
 config network org.car2x.veins.nodes.Scenario
 config sim-time-limit 100s
 config *.playgroundSizeX 600m

@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-file = "Project\\simulations\\results\\Scenario1.csv"  
+file = "Project\\simulations\\results\\Scenario3_ObstacleShadowing-#0.csv"  
 
 print(f"Scanning {file} for variable names...\n")
 

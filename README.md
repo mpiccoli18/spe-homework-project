@@ -6,6 +6,9 @@ In this repository you can find:
 
 
 ## Project: Impact of Urban Environments on V2V Communication
+
+**Author: Marco Piccoli**
+
 This section contains the exact commands to run, to obtain the same results contained inside the final report.
 
 ### Prerequisites
@@ -24,18 +27,16 @@ The `/Project` directory contains:
 ### 1. Generating Traffic
 Traffic is generated stochastically to ensure statistical fairness across runs. \
 We utilize SUMO's `randomTrips.py` script. Navigate to the `/simulations` folder and run:
-```
+```bash
 python $SUMO_HOME/tools/randomTrips.py -n map.net.xml -r routes.rou.xml -e 100 -l
 ```
 
 ### 2. Running Simulations
-The simulation is configured to run 5 independent replications for each scenario using different RNG seeds to calculate 95% Confidence Intervals.
+The simulation is configured to run 10 independent replications for each scenario using different RNG seeds to calculate 95% Confidence Intervals (CI).
 
-To execute the runs from the command line:
-```
-./run_simulations.sh
-```
-_(Alternatively, open omnetpp.ini in the OMNeT++ IDE, select the desired Scenario, and run all repetitions)._
+To execute the runs, open the OMNeT++ IDE, right-click on `○mnetpp.ini` and select:
+- **Run As -> Run Configuration**
+- Set the number of **Run(s)** to `0..9` to batch-execute all repetitions.
 
 The defined scenarios are three:
 - Free Space: idealized baseline vacuum;
@@ -43,15 +44,26 @@ The defined scenarios are three:
 - Obstacle Shadowing: introduces physical building polygons.
 
 ### 3. Data Extraction and Plotting
-Once the simulations complete, the scalar files must be parsed. The Python scripts automatically calculate the mean, Packet Delivery Ratio (PDR), and 95% Confidence Intervals across all 5 runs.
+Once the simulations complete, the `.sca` (scalar) files must be parsed. To do so, simply run:
 
-Execute the plotting script:
+```bash
+python script/export.py
 ```
+
+To look at what parameters the simulations have stored inside the _.csv_ files, simply run:
+
+```bash
+python script/variables.py
+```
+
+The plotting script automatically calculates the mean and 95% CI across all 10 runs for three different performance metrics:
+
+```bash
 python script/plot.py
 ```
 
-The script will output three graphs to the root directory:
+The script will output, to the root directory, three `.pdf` files containing the graphs for each scenario:
 
-+ V2V_PDR_Confidence.pdf (Packet Delivery Ratio with CI error bars)
-+ MAC_Collisions.pdf
-+ Channel_Busy_Time.pdf
++ V2V_PDR_Confidence.pdf (Packet Delivery Ratio with CI)
++ V2V_MAC_Backoffs.pdf (Channel congestion with CI)
++ V2V_SNIR_Drops.pdf (Packets drop due to interference with CI)

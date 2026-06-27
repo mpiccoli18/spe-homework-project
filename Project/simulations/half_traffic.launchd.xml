@@ -1,0 +1,6 @@
+<launch>
+    <copy file="city.net.xml"/>
+    <copy file="half_traffic.rou.xml"/>
+    <copy file="buildings.poly.xml"/>
+    <copy file="half_simulation.sumocfg" type="config"/>
+</launch>

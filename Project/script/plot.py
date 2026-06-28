@@ -8,7 +8,9 @@ import os
 scenarios = {
     'Free Space': 'Scenario1_FreeSpace',
     'Two-Ray Ground': 'Scenario2_TwoRayGround',
-    'Urban Shadowing': 'Scenario3_ObstacleShadowing'
+    'Urban Shadowing': 'Scenario3_ObstacleShadowing',
+    'Half Simulation': 'Scenario4_HalfSimulation',
+    'Straight Road': 'Scenario5_StraightRoad'
 }
 
 # Data dictionaries to hold our metrics across all 10 runs
@@ -50,9 +52,12 @@ for name, prefix in scenarios.items():
             tx = extract_sum('generatedWSMs')
             if tx == 0:  
                 tx = extract_sum('sentPackets')
+
+            if 'Half Simulation' in name or 'HalfTraffic' in prefix:
+                total_expected = tx * 49  # Only 50 cars max in the half simulation
+            else:
+                total_expected = tx * 99  # 100 cars in standard simulations
                 
-            # In a 100-vehicle simulation, 1 broadcast should ideally reach 99 other cars.
-            total_expected = tx * 99 
             pdr = (rx / total_expected) * 100 if total_expected > 0 else 0
             
             # MAC Backoff Calculation (Channel Congestion)

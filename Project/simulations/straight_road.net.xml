@@ -18,35 +18,15 @@
 </configuration>
 -->
 
-<net version="1.16" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+<net version="1.16" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
 
-    <location netOffset="0.00,0.00" convBoundary="0.00,0.00,1000.00,0.00" origBoundary="0.00,0.00,1000.00,0.00" projParameter="!"/>
-
-    <edge id=":A0_0" function="internal">
-        <lane id=":A0_0_0" index="0" speed="3.65" length="4.67" shape="0.00,1.60 -1.20,0.80 -1.60,0.00 -1.20,-0.80 0.00,-1.60"/>
+        <location netOffset="0.00,0.00" convBoundary="0.00,0.00,1000.00,100.00" origBoundary="0.00,0.00,1000.00,100.00" projParameter="!"/>
+    
+    <edge id="straight_edge" from="start_node" to="end_node" priority="-1">
+        <lane id="straight_edge_0" index="0" speed="20.00" length="1000.00" shape="0.00,100.00 1000.00,100.00"/>
     </edge>
-    <edge id=":B0_0" function="internal">
-        <lane id=":B0_0_0" index="0" speed="3.65" length="4.67" shape="1000.00,-1.60 1001.20,-0.80 1001.60,0.00 1001.20,0.80 1000.00,1.60"/>
-    </edge>
-
-    <edge id="A0B0" from="A0" to="B0" priority="-1">
-        <lane id="A0B0_0" index="0" speed="13.89" length="1000.00" shape="0.00,-1.60 1000.00,-1.60"/>
-    </edge>
-    <edge id="B0A0" from="B0" to="A0" priority="-1">
-        <lane id="B0A0_0" index="0" speed="13.89" length="1000.00" shape="1000.00,1.60 0.00,1.60"/>
-    </edge>
-
-    <junction id="A0" type="priority" x="0.00" y="0.00" incLanes="B0A0_0" intLanes=":A0_0_0" shape="0.00,0.00 0.00,3.20 0.00,0.00">
-        <request index="0" response="0" foes="0" cont="0"/>
-    </junction>
-    <junction id="B0" type="priority" x="1000.00" y="0.00" incLanes="A0B0_0" intLanes=":B0_0_0" shape="1000.00,0.00 1000.00,-3.20 1000.00,0.00">
-        <request index="0" response="0" foes="0" cont="0"/>
-    </junction>
-
-    <connection from="A0B0" to="B0A0" fromLane="0" toLane="0" via=":B0_0_0" dir="t" state="M"/>
-    <connection from="B0A0" to="A0B0" fromLane="0" toLane="0" via=":A0_0_0" dir="t" state="M"/>
-
-    <connection from=":A0_0" to="A0B0" fromLane="0" toLane="0" dir="t" state="M"/>
-    <connection from=":B0_0" to="B0A0" fromLane="0" toLane="0" dir="t" state="M"/>
+    
+    <junction id="start_node" type="dead_end" x="0.00" y="100.00" incLanes="" intLanes="" shape="0.00,101.60 0.00,98.40"/>
+    <junction id="end_node" type="dead_end" x="1000.00" y="100.00" incLanes="straight_edge_0" intLanes="" shape="1000.00,98.40 1000.00,101.60"/>
 
 </net>

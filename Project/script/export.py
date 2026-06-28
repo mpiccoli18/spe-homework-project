@@ -4,7 +4,9 @@ import os
 scenarios = {
     'Scenario1': 'Scenario1_FreeSpace',
     'Scenario2': 'Scenario2_TwoRayGround',
-    'Scenario3': 'Scenario3_ObstacleShadowing'
+    'Scenario3': 'Scenario3_ObstacleShadowing',
+    'Scenario4': 'Scenario4_HalfSimulation',
+    'Scenario5': 'Scenario5_StraightRoad'
 }
 
 # The folder where the results are located

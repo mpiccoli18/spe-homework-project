@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-filepath = './Project/simulations/results/Scenario3_ObstacleShadowing-#0.csv'
+filepath = './Project/simulations/results/Scenario4_HalfSimulation-#0.csv'
 
 if not os.path.exists(filepath):
     print(f"Error: Could not find {filepath}. Make sure you are in the project root.")

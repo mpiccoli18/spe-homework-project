@@ -48,8 +48,9 @@ for name, prefix in scenarios.items():
                 return rows[val_col].astype(float).sum() if not rows.empty else 0
 
             # PDR Calculation (Broadcast Formula)
-            rx = extract_sum('receivedWSMs')
-            tx = extract_sum('generatedWSMs')
+            # Check for BOTH WSMs (Wave Short Messages) and BSMs (Basic Safety Messages)
+            rx = extract_sum('receivedWSMs') + extract_sum('receivedBSMs')
+            tx = extract_sum('generatedWSMs') + extract_sum('generatedBSMs')
             if tx == 0:  
                 tx = extract_sum('sentPackets')
 

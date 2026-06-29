@@ -9,7 +9,7 @@ In this repository you can find:
 
 **Author: Marco Piccoli**
 
-This section contains the exact commands to run, to obtain the same results contained inside the final report.
+This section contains the exact commands to run and to obtain almost the same (the seed changes) results contained inside the final report.
 
 ### Prerequisites
 To run this simulation, you must have the following installed:

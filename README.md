@@ -39,11 +39,16 @@ To execute the runs, open the OMNeT++ IDE, right-click on `○mnetpp.ini` and se
 - **Run As -> Run Configuration**
 - Set the number of **Run(s)** to `0..9` to batch-execute all repetitions.
 
-The defined scenarios are three:
+The baseline scenarios are three:
 - Free Space: idealized baseline vacuum;
 - Two-Ray Ground: introduces asphalt reflection and multipath fading;
 - Obstacle Shadowing: introduces physical building polygons.
 
+The sensitivity control scenarios are two:
+- Half Traffic: based on the Obstacle Shadowing scenario, the spawn rate is reduced from 1 cps (car per second) to 2 cps, reducing channel congestion
+- Straight Road: based on Two-Ray Ground scenario, in which the 600x600 grid is replaced by a single 1-kilometer highway.
+
+These two additional scenarios were defined to whether network degradation is caused by MAC-layer interference or PHY-layer attenuation.
 ### 3. Data Extraction and Plotting
 Once the simulations complete, the `.sca` (scalar) files must be parsed. To do so, simply run:
 
@@ -69,8 +74,9 @@ The plotting script automatically calculates the mean and 95% CI across all 10 r
 python script/plot.py
 ```
 
-The script will output, to the root directory, three `.pdf` files containing the graphs for each scenario:
+The scripts will output, to the root directory, four `.pdf` files containing the values plotted as bar graphs for each scenario:
 
 + V2V_PDR_Confidence.pdf (Packet Delivery Ratio with CI)
 + V2V_MAC_Backoffs.pdf (Channel congestion with CI)
 + V2V_SNIR_Drops.pdf (Packets drop due to interference with CI)
++ V2V_MaxVehicles.pdf (Mean concurrent vehicles across al 10 runs)

@@ -13,7 +13,7 @@ scenarios = {
     'Straight Road': 'Scenario5_StraightRoad'
 }
 
-# Data dictionaries to hold our metrics across all 10 runs
+# Data dictionaries to hold the metrics across all 10 runs
 data = {
     'PDR': {name: [] for name in scenarios},
     'MAC_Backoff': {name: [] for name in scenarios},
